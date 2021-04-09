@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "UA-155991615-1");
+    </script>
+    <!-- my stuff -->
+    <meta charset="utf-8">
+    <title>Isaac's housing data</title>
+    <meta name="description" content="ACT housing and rental price changes from 2019 to 2021.">
+    <meta name="keywords" content="housing, data, prices, rent, value, act, canberra, corelogic">
+    <meta name="author" content="Markus Mannheim">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <link href="./resources/isaacStyle.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+  </head>
+  <body>
+    <!-- initial layout -->
+    <div id="container">
+      <div id="title">
+        <h1>ISAAC'S DASHING DASHBOARD</h1>
+        <p>ACT housing and rental price changes, Jan 2019 to Feb 2021:
+      </div>
+      <div id="chart">
+        <table id="table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="footer"><span>Data:</span> CoreLogic<br><span>Design:</span> Markus Mannheim</div>
+    </div>
+    <script>
+      // name page elements
+      container = d3.select("#container");
+      title = d3.select("#title");
+      chart = d3.select("#chart");
+      footer = d3.select("#footer");
+      table = d3.select("#table");
+      thead = table.select("thead");
+      tbody = table.select("tbody");
+      // load data
+      d3.csv("./data/housingData.csv")
+        .then(function(data) {
+          // format data
+          housingData = data
+            .filter(function(d) {
+              return !d.suburb.includes("Remainder");
+            })
+            .map(function(d) {
+              for (i in data.columns.slice(2)) {
+                d[data.columns.slice(2)[i]] = +d[data.columns.slice(2)[i]];
+              };
+              return d;
+            });
+          console.log(housingData[1]);
+          // fade-in
+          container.transition()
+            .duration(1000)
+            .style("opacity", 1);
+        });
+    </script>
+  </body>
+</html>
