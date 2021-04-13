@@ -61,14 +61,55 @@ h1, p {
   font-weight: bold;
 }
 #chart {
-  background: lemonchiffon;
   height: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.mainColumn {
+  width: 49%;
+  display: flex;
+  flex-flow: column;
+}
+.header {
+  color: white;
+  background: #666;
+  font-family: "ABCSans Black", "Arial Black", sans-serif;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: .25rem;
+  letter-spacing: .25rem;
+  margin-bottom: 1rem;
+}
+.tableHolder {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+}
+.minorColumn {
+  width: 48%;
+  display: flex;
+  flex-flow: column;
+}
+table {
+  border-collapse: collapse;
+}
+th {
+  color: white;
+  background: #ccc;
+  padding: 2px;
+  font-size: .9rem;
 }
 #footer {
   padding-top: 1rem;
   font-size: .9rem;
   color: #999;
   font-weight: bold;
+}
+.minorHeader {
+  color: white;
+  background: #999;
+  text-align: center;
+  padding: .2rem;
 }
 #footer span {
   font-weight: normal;

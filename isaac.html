@@ -29,10 +29,8 @@
         <p>ACT housing and rental price changes, Jan 2019 to Feb 2021:
       </div>
       <div id="chart">
-        <table id="table">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
+        <div id="houses" class="mainColumn"></div>
+        <div id="units" class="mainColumn"></div>
       </div>
       <div id="footer"><span>Data:</span> CoreLogic<br><span>Design:</span> Markus Mannheim</div>
     </div>
@@ -42,9 +40,6 @@
       title = d3.select("#title");
       chart = d3.select("#chart");
       footer = d3.select("#footer");
-      table = d3.select("#table");
-      thead = table.select("thead");
-      tbody = table.select("tbody");
       // load data
       d3.csv("./data/housingData.csv")
         .then(function(data) {
@@ -59,12 +54,59 @@
               };
               return d;
             });
-          console.log(housingData[1]);
+          // set up columns
+          d3.selectAll(".mainColumn")
+            .each(setUpMainColumn);
           // fade-in
           container.transition()
             .duration(1000)
             .style("opacity", 1);
         });
+
+      function setUpMainColumn() {
+        let mainColumn = d3.select(this);
+        let dwelling = this.id;
+        let header = d3.select(this)
+          .append("div")
+            .classed("header", true)
+            .text(dwelling.toUpperCase());
+        let tableHolder = mainColumn
+          .append("div")
+            .classed("tableHolder", true);
+        let tableTypes = ["value", "rent"];
+        tableTypes.forEach(function(d) {
+          tableHolder.append("div")
+            .attr("class", d)
+            .classed("minorColumn", true)
+            .each(function() {
+              insertTable(this, dwelling, d);
+            });
+        });
+      }
+
+      function insertTable(object, dwelling, type) {
+        d3.select(object).append("div")
+          .classed("minorHeader", true)
+          .text(type.toUpperCase());
+        let table = d3.select(object)
+          .append("table");
+        let thead = table
+          .append("thead")
+            .append("tr");
+        let tbody = table
+          .append("tbody");
+        let columns = ["suburb", "2021", "2019", "change"];
+        let tableData = housingData
+          .filter(function(d) {
+            return d.type == dwelling.slice(0, -1)
+              && (d[type] || d["old" + d[type].slice(0, 1).toUpperCase() + d[type].slice(1)]);
+          });
+        columns.forEach(function(d) {
+          thead.append("th")
+            .text(d);
+        });
+        console.log(tableData);
+      }
     </script>
   </body>
 </html>
