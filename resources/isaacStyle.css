@@ -158,10 +158,10 @@ h1, p {
   height: 100%;
 }
 #notice {
-  color: #00A388;
+  color: #666;
   font-family: "ABCSans Black", "Arial Black", sans-serif;
   font-size: 2rem;
-  margin-top: 25%;
+  margin-top: 3rem;
 }
 @media only screen and (max-width: 1399px) {
   #chart {
