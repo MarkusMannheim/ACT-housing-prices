@@ -32,6 +32,9 @@
         <div id="houses" class="mainColumn"></div>
         <div id="units" class="mainColumn"></div>
       </div>
+      <div id="mobile">
+        <div id="notice">Dude, I'm not showing you any information until you access this on a bigger screen.</div>
+      </div>
       <div id="footer"><span>Data:</span> CoreLogic<br><span>Design:</span> Markus Mannheim</div>
     </div>
     <script>
@@ -52,6 +55,7 @@
               for (i in data.columns.slice(2)) {
                 d[data.columns.slice(2)[i]] = +d[data.columns.slice(2)[i]];
               };
+              d.suburb = d.suburb.replace(" (ACT)", "");
               return d;
             });
           // set up columns
@@ -61,6 +65,7 @@
           container.transition()
             .duration(1000)
             .style("opacity", 1);
+
         });
 
       function setUpMainColumn() {
@@ -85,27 +90,172 @@
       }
 
       function insertTable(object, dwelling, type) {
-        d3.select(object).append("div")
-          .classed("minorHeader", true)
-          .text(type.toUpperCase());
         let table = d3.select(object)
-          .append("table");
-        let thead = table
-          .append("thead")
-            .append("tr");
-        let tbody = table
-          .append("tbody");
+          .append("div")
+            .classed("table", true);
+        let tableHeader = table
+          .append("div")
+            .classed("tableHeader", true)
+            .text(type.toUpperCase());
+        let tableBody = table
+          .append("div")
+            .classed("tableBody", true);
         let columns = ["suburb", "2021", "2019", "change"];
         let tableData = housingData
           .filter(function(d) {
             return d.type == dwelling.slice(0, -1)
-              && (d[type] || d["old" + d[type].slice(0, 1).toUpperCase() + d[type].slice(1)]);
+              && (d[type] || d["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
           });
-        columns.forEach(function(d) {
-          thead.append("th")
-            .text(d);
+        let valid = tableData
+          .filter(function(d) {
+            return !isNaN(d["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+          })
+          .sort(function(a, b) {
+            return d3.descending(a["change" + type.slice(0, 1).toUpperCase() + type.slice(1)], b["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+          });
+        let invalid = tableData
+          .filter(function(d) {
+            return isNaN(d["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+          }).sort(function(a, b) {
+            return d3.descending(a[type], b[type]);
+          });
+        tableData = valid.concat(invalid);
+        columns.forEach(function(d, i) {
+          let tableColumn = tableBody
+            .append("div")
+              .classed("tableColumn", true)
+              .attr("value", i);
+          let columnHeader = tableColumn
+            .append("div")
+              .classed("tableColumnHeader", true)
+              .on("click", select)
+              .html(d + "<span></span>");
+          tableData.forEach(function(e) {
+            tableColumn.append("div")
+              .classed("tableCell", true)
+              .text(function() {
+                if (i == 0) {
+                  return e.suburb;
+                } else if (i == 1) {
+                  if (isNaN(e[type])) {
+                    return "—";
+                  } else {
+                    return d3.format("$,.0f")(e[type]);
+                  }
+                } else if (i == 2) {
+                  if (isNaN(e["old" + type.slice(0, 1).toUpperCase() + type.slice(1)])) {
+                    return "—";
+                  } else {
+                    return d3.format("$,.0f")(e["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+                  }
+                } else {
+                  if (isNaN(e["change" + type.slice(0, 1).toUpperCase() + type.slice(1)])) {
+                    return "—";
+                  } else {
+                    return d3.format(".1%")(e["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+                  }
+                }
+              });
+          });
+          if (i == 3) {
+            tableColumn.classed("selected descend", true);
+          }
         });
-        console.log(tableData);
+      }
+
+      function select() {
+        let type = this.parentNode.parentNode.parentNode.parentNode.className.includes("rent") ? "rent" : "value";
+        let dwelling = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.className.includes("houses") ? "houses" : "units";
+        let value = +this.parentNode.getAttribute("value");
+        let selected = this.parentNode.className.includes("selected");
+        if (selected) {
+          this.parentNode.classList.toggle("descend");
+          this.parentNode.classList.toggle("ascend");
+        } else {
+          this.parentNode.parentNode.querySelectorAll(".tableColumn")
+            .forEach(function(d) {
+              d.classList.remove("selected");
+              d.classList.remove("ascend");
+              d.classList.remove("descend");
+            });
+          this.parentNode.classList.add("selected");
+          this.parentNode.classList.add("descend");
+        }
+        let ascend = this.parentNode.className.includes("ascend");
+        this.parentNode.parentNode.querySelectorAll(".tableCell")
+          .forEach(function(d) {
+            d.remove();
+          });
+        let tableData = housingData
+          .filter(function(d) {
+            return d.type == dwelling.slice(0, -1)
+              && (d[type] || d["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+          });
+        let valid = tableData
+          .filter(function(d) {
+            if (value < 2) {
+              return d;
+            } else {
+              return !isNaN(d["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+            }
+          })
+          .sort(function(a, b) {
+            if (value == 0) {
+              return ascend ? d3.ascending(a.suburb, b.suburb) :
+                d3.descending(a.suburb, b.suburb);
+            } else if (value == 1) {
+              return ascend ? d3.ascending(a[type], b[type]) :
+                d3.descending(a[type], b[type]);
+            } else if (value == 2) {
+              return ascend ? d3.ascending(a["old" + type.slice(0, 1).toUpperCase() + type.slice(1)], b["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]) :
+                d3.descending(a["old" + type.slice(0, 1).toUpperCase() + type.slice(1)], b["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+            } else {
+              return ascend ? d3.ascending(a["change" + type.slice(0, 1).toUpperCase() + type.slice(1)], b["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]) :
+                d3.descending(a["change" + type.slice(0, 1).toUpperCase() + type.slice(1)], b["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+            }
+          });
+        let invalid = tableData
+          .filter(function(d) {
+            if (value < 2) {
+              return !d;
+            } else {
+              return isNaN(d["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+            }
+          }).sort(function(a, b) {
+            return ascend ? d3.ascending(a[type], b[type]) :
+              d3.descending(a[type], b[type]);
+          });
+        tableData = valid.concat(invalid);
+        this.parentNode.parentNode.querySelectorAll(".tableColumn")
+          .forEach(function(d, i) {
+            tableData.forEach(function(e) {
+              d3.select(d).append("div")
+                .classed("tableCell", true)
+                .text(function() {
+                  if (i == 0) {
+                    return e.suburb;
+                  } else if (i == 1) {
+                    if (isNaN(e[type])) {
+                      return "—";
+                    } else {
+                      return d3.format("$,.0f")(e[type]);
+                    }
+                  } else if (i == 2) {
+                    if (isNaN(e["old" + type.slice(0, 1).toUpperCase() + type.slice(1)])) {
+                      return "—";
+                    } else {
+                      return d3.format("$,.0f")(e["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+                    }
+                  } else {
+                    if (isNaN(e["change" + type.slice(0, 1).toUpperCase() + type.slice(1)])) {
+                      return "—";
+                    } else {
+                      return d3.format(".1%")(e["change" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+                    }
+                  }
+                });
+            });
+          });
       }
     </script>
   </body>
