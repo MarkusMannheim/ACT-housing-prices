@@ -103,8 +103,7 @@
         let columns = ["suburb", "2021", "2019", "change"];
         let tableData = housingData
           .filter(function(d) {
-            return d.type == dwelling.slice(0, -1)
-              && (d[type] || d["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+            return d.type == dwelling && d[type];
           });
         let valid = tableData
           .filter(function(d) {
@@ -165,7 +164,7 @@
 
       function select() {
         let type = this.parentNode.parentNode.parentNode.parentNode.className.includes("rent") ? "rent" : "value";
-        let dwelling = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.className.includes("houses") ? "houses" : "units";
+        let dwelling = this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id == "houses" ? "houses" : "units";
         let value = +this.parentNode.getAttribute("value");
         let selected = this.parentNode.className.includes("selected");
         if (selected) {
@@ -188,8 +187,7 @@
           });
         let tableData = housingData
           .filter(function(d) {
-            return d.type == dwelling.slice(0, -1)
-              && (d[type] || d["old" + type.slice(0, 1).toUpperCase() + type.slice(1)]);
+            return d.type == dwelling && d[type];
           });
         let valid = tableData
           .filter(function(d) {
