@@ -9,20 +9,25 @@
       gtag("js", new Date());
       gtag("config", "UA-155991615-1");
     </script>
-    <!-- my stuff -->
+
+    <!-- page data -->
     <meta charset="utf-8">
-    <title>ACT mobile speed cameras</title>
-    <meta name="description" content="The locations of mobile speed cameras in Canberra.">
-    <meta name="keywords" content="darwin, tahiti, weather, climate, temperature, rainfall, soi, elnino, lanina">
+    <title>ACT house prices</title>
+    <meta name="description" content="ACT housing and rental price changes from 2019 to 2021.">
+    <meta name="keywords" content="canberra, act, housing, house, price, prices, change, rises, map, suburb, suburbs">
     <meta name="author" content="Markus Mannheim">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="https://d3js.org/topojson.v3.min.js"></script>
+
+    <!-- scripts and style -->
+    <script src="./resources/d3js.org/d3.v6.min.js"></script>
+    <script src="./resources/topojson.v3.min.js"></script>
+    <script src="./resources/functions.js"></script>
     <link href="./resources/mapStyle.css" rel="stylesheet">
-    <link href="./resources/abcLogo64.png" rel="icon">
+    <link href="./media/abcLogo64.png" rel="icon">
   </head>
+
   <body>
-    <!-- initial layout -->
+    <!-- HTML skeleton -->
     <div id="container">
       <svg id="map">
         <g id="mapGroup">
@@ -36,129 +41,7 @@
       <div id="title">ALL MOBILE CAMERA SITES</div>
       <div id="key"></div>
     </div>
-    <script>
-      // name page elements
-      container = d3.select("#container");
-      map = d3.select("#map");
-      mapGroup = d3.select("#mapGroup");
-      border = d3.select("#border");
-      suburbs = d3.select("#suburbs");
-      water = d3.select("#water");
-      camerasAll = d3.select("#camerasAll");
-      camerasBest = d3.select("#camerasBest");
-      // load data
-      Promise.all([
-        d3.json("./data/border.topojson"),
-        d3.json("./data/suburbs.topojson"),
-        d3.json("./data/mesh.topojson"),
-        d3.csv("./data/camerasAll.csv"),
-        d3.csv("./data/camerasBest.csv")
-      ]).then(function(data) {
-          // format data
-          borderData = topojson.feature(data[0], data[0].objects.areas);
-          suburbData = topojson.feature(data[1], data[1].objects.areas);
-          waterData = topojson.feature(data[2], data[2].objects.areas);
-          data[3] = data[3].map(function(d) {
-            return {
-              lat: (+d.lat< -100 ? +d.lat / 1000000: +d.lat),
-              lng: +d.lng
-            };
-          });
-          cameraAllData = {
-            type: "FeatureCollection",
-            features: data[3]
-              .map(function(d) {
-                return {
-                  type: "Feature",
-                  geometry: {
-                    type: "Point",
-                    coordinates: [d.lng, d.lat]
-                  },
-                  properties: {
-                    class: "cameraAll"
-                  }
-                };
-              })
-          };
-          cameraBestData = {
-            type: "FeatureCollection",
-            features: data[4]
-              .map(function(d) {
-                return {
-                  type: "Feature",
-                  geometry: {
-                    type: "Point",
-                    coordinates: [d.lng, d.lat]
-                  },
-                  properties: {
-                    class: "cameraBest",
-                    desc: d.desc,
-                    productivity: +d.productivity_fines
-                  }
-                };
-              })
-          };
-          // resize function
-          window.addEventListener("resize", resize);
-          // launch
-          d3.timeout(function() {
-            prepareMap();
-            resize();
-            // fade in
-            mapGroup.transition()
-              .duration(500)
-              .style("opacity", 1);
-            camerasAll.selectAll(".cameraAll")
-              .transition()
-                .duration(1)
-                .delay(function(d, i) { return i * 1000 / cameraAllData.features.length + 1000; })
-                .style("opacity", .7)
-              .transition()
-                .duration(1000)
-                .delay(2000)
-                .style("opacity", .3);
-            camerasBest.selectAll(".cameraBest")
-              .transition()
-                .duration(1)
-                .delay(function(d, i) { return i * 1000 / cameraBestData.features.length + 6000; })
-                .style("opacity", 1);
-          }, 500);
-        });
 
-      function prepareMap() {
-        // map functions
-        projection = d3.geoConicEqualArea()
-          .parallels([-26.29, -44.29])
-          .rotate([-149.13, 0]);
-        path = d3.geoPath()
-          .projection(projection);
-          // plot paths
-        suburbs.selectAll(".suburb")
-            .data(suburbData.features)
-          .enter().append("path")
-            .classed("suburb", true);
-        border.datum(borderData)
-          .classed("border", true);
-        water.datum(waterData)
-          .classed("water", true);
-        camerasAll.selectAll(".cameraAll")
-            .data(cameraAllData.features)
-          .enter().append("path")
-            .classed("cameraAll", true);
-        camerasBest.selectAll(".cameraBest")
-            .data(cameraBestData.features)
-          .enter().append("path")
-            .classed("cameraBest", true);
-      }
-      function resize() {
-        dimensions = document.getElementById("map").getBoundingClientRect();
-        width = dimensions.width;
-        height = dimensions.height;
-        projection.fitExtent([[15, 15], [width - 15, height - 15]], cameraBestData);
-        path.pointRadius(function() { return width < 500 ? 2 : 3; });
-        mapGroup.selectAll("path")
-          .attr("d", path);
-      }
-    </script>
+    <script>
   </body>
 </html>
