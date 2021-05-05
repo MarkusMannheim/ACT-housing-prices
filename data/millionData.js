@@ -30,7 +30,7 @@ fs.readFile("./million_data.csv", "utf8", function(error, data) {
     cleanData[i].data = [];
     d.value.forEach(function(e) {
       cleanData[i].data.push({
-        month: new Date(e[1][0].month.slice(0, 4), e[1][0].month.slice(5, 7), e[1][0].month.slice(-2)),
+        month: e[1][0].month,
         count: e[1][0].count
       });
     });
