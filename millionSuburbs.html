@@ -31,7 +31,25 @@
     <div id="container">
       <div id="header">
         <h1>MILLION-DOLLAR SALES</h1>
-        <p></p>
+      </div>
+      <div id="legend">
+        <h1>sales/month:</h1>
+        <div class="legendBox" id="legend1">
+          <div></div>
+          <p>1</p>
+        </div>
+        <div class="legendBox" id="legend6">
+          <div></div>
+          <p>6</p>
+        </div>
+        <div class="legendBox" id="legend12">
+          <div></div>
+          <p>12</p>
+        </div>
+        <div class="legendBox" id="legend18">
+          <div></div>
+          <p>18</p>
+        </div>
       </div>
       <svg id="map">
         <g id="mapGroup">
@@ -40,12 +58,13 @@
           <path id="water"></path>
         </g>
       </svg>
-      <div id="footer">Data: Allhomes, ACT government<span class="mobileSpan"><br></span><span class="desktopSpan">. </span>Map: Markus Mannheim</div>
+      <div id="footer">Data: Allhomes, ACT government<span class="mobileSpan"><br></span><span class="desktopSpan">. </span>Graphic: Markus Mannheim</div>
     </div>
 
     <script>
       // declare page elements
       header = d3.select("#header");
+      legend = d3.select("#legend");
       map = d3.select("#map");
       mapGroup = d3.select("#map");
       border = d3.select("#border");

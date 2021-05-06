@@ -54,15 +54,21 @@ h1, p {
   text-align: center;
 }
 #header h1 {
-  padding: 3px 6px;
-  font-size: 1.25rem;
+  padding: 2px 4px;
+  font-size: 1rem;
   color: #01CFFF;
   background: #333;
 }
 #header p {
-  padding-top: 1rem;
-  font-size: 1.5rem;
-  text-shadow: 1px 1px 1px #f2f2f2;
+  position: absolute;
+  width: 100%;
+  padding: 2px 0;
+  font-size: 1rem;
+  box-shadow: 1px 1px 3px #999;
+  border: solid 1px #333;
+  transform: rotateX(90deg);
+  transform-origin: top;
+  background: white;
 }
 #map {
   height: 100%;
@@ -71,7 +77,7 @@ h1, p {
 #border {
   fill: none;
   stroke: #666;
-  stroke-dasharray: 2 3;
+  stroke-dasharray: 1 2;
   pointer-events: none;
 }
 .suburb {
@@ -89,8 +95,66 @@ h1, p {
   display: inline;
 }
 #footer {
+  position: fixed;
+  bottom: 0;
   color: #999;
+  font-size: .75rem;
+  background: white;
+}
+.sale {
+  stroke: #333;
+  stroke-width: .5;
+  fill: #FFB300;
+}
+#legend {
+  opacity: 0;
+  text-align: right;
+  position: fixed;
+  right: .5rem;
+  bottom: 3rem;
+  font-family: "ABCSans Light", "Arial Narrow", sans-serif;
+}
+#legend h1 {
   font-size: .8rem;
+  color: #666;
+}
+.legendBox {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: .25rem;
+}
+#legend p {
+  text-align: center;
+  width: 1rem;
+  margin-left: .5rem;
+  font-size: .8rem;
+  align-self: center;
+}
+.legendBox div {
+  border: solid .5px #333;
+  background: #FFB300;
+  opacity: .5;
+  align-self: center;
+}
+#legend1 div {
+  height: 4.7px;
+  width: 4.7px;
+  border-radius: 4.7px;
+}
+#legend6 div {
+  height: 18px;
+  width: 18px;
+  border-radius: 18px;
+}
+#legend12 div {
+  height: 34px;
+  width: 34px;
+  border-radius: 34px;
+}
+#legend18 div {
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
 }
 @media only screen and (min-width: 500px) {
   .mobileSpan {
@@ -98,5 +162,53 @@ h1, p {
   }
   .desktopSpan {
     display: inline;
+  }
+  #header h1 {
+    padding: 3px 6px;
+    font-size: 1.25rem;
+  }
+  #header p {
+    padding: 3px 0;
+    font-size: 1.25rem;
+    box-shadow: 2px 2px 5px #999;
+  }
+  #border {
+    stroke-dasharray: 2 3;
+  }
+  #footer {
+    font-size: .8rem;
+  }
+  #legend {
+    right: 1rem;
+    bottom: 5rem;
+  }
+  #legend h1 {
+    font-size: .9rem;
+  }
+  .legendBox {
+    margin-top: .5rem;
+  }
+  #legend p {
+    font-size: .9rem;
+  }
+  #legend1 div {
+    height: 6.3px;
+    width: 6.3px;
+    border-radius: 6.3px;
+  }
+  #legend6 div {
+    height: 28px;
+    width: 28px;
+    border-radius: 28px;
+  }
+  #legend12 div {
+    height: 54px;
+    width: 54px;
+    border-radius: 54px;
+  }
+  #legend18 div {
+    height: 80px;
+    width: 80px;
+    border-radius: 80px;
   }
 }

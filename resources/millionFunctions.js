@@ -73,9 +73,15 @@ function getDimensions() {
 function adjustFunctions() {
   console.log("call adjustFunctions()");
 
+  // map projection
   mobile ?
-    projection.fitSize([width, height], suburbData) :
-    projection.fitSize([width * .7, height], suburbData);
+    projection.fitExtent([[-width * .2, 45], [width * .8, height + 15]], suburbData) :
+    projection.fitExtent([[10, 10], [width * .8, height - 25]], suburbData);
+
+  // sale circle radius
+  mobile ?
+    rScale.range([1, 25]) :
+    rScale.range([1, 40]);
 }
 
 function plotMap() {
@@ -95,11 +101,16 @@ function openViz() {
     resizer();
 
     // fade in
+    legend.transition()
+      .duration(500)
+      .style("opacity", 1);
     map.transition()
       .duration(500)
       .style("opacity", 1)
 
-      .on("end", startLoop);
+      .on("end", function() {
+        d3.timeout(startLoop, 1000);
+      });
 
   }, 500);
 }
@@ -114,8 +125,10 @@ function startLoop() {
     if (elapsed >= month * loopTime + loopTime) {
       month = month + 1;
 
-      if (month > 119) {
+      if (month > 59) {
         timer.stop();
+        // restart loop
+        d3.timeout(resetLoop, loopTime * 5);
 
       } else {
         illustrateMonth(month);
@@ -127,7 +140,7 @@ function startLoop() {
 function monthToDateString(month) {
   console.log("call monthToDateString()");
 
-  let dateString = (2011 + (Math.floor(month / 12))) + "-" + String((month % 12) + 1).padStart(2, 0) + "-01";
+  let dateString = (2016 + (Math.floor(month / 12))) + "-" + String((month % 12) + 1).padStart(2, 0) + "-01";
 
   return dateString;
 }
@@ -144,7 +157,16 @@ function changeMonthLabel(dateString) {
   console.log("call changeMonthLabel(dateString)");
 
   header.select("p")
-    .text(d3.timeFormat("%b %Y")(d3.timeParse("%Y-%m-%d")(dateString)));
+    .transition()
+      .duration(loopTime / 2)
+      .style("transform", "rotateX(-90deg)")
+    .remove();
+
+  header.append("p")
+    .text(d3.timeFormat("%b %Y")(d3.timeParse("%Y-%m-%d")(dateString)))
+    .transition()
+      .duration(loopTime / 2)
+      .style("transform", "rotateX(0deg)");
 }
 
 function drawSales(dateString) {
@@ -166,6 +188,7 @@ function drawSales(dateString) {
       }
     });
 
+  // draw sale circles
   saleData.forEach(function(d) {
     mapGroup.append("circle")
       .datum(d)
@@ -173,20 +196,41 @@ function drawSales(dateString) {
       .attr("cx", projection(d.centroid)[0])
       .attr("cy", projection(d.centroid)[1])
       .attr("r", 0)
+      .style("opacity", 0)
       .transition()
-        .duration(loopTime / 2)
-        .attr("r", d.count)
+        .duration(loopTime)
+        .attr("r", rScale(d.count))
+        .style("opacity", .75)
+
+      // remove sale circles
       .transition()
-        .duration(loopTime * 2)
+        .duration(loopTime * 5)
+        .style("opacity", 0)
         .attr("r", 0)
       .remove();
   });
 }
 
 function adjustSales() {
-  console.log("call adjustSales(dateString)");
+  console.log("call adjustSales()");
 
   d3.selectAll(".sale")
     .attr("cx", function(d) { return projection(d.centroid)[0]; })
     .attr("cy", function(d) { return projection(d.centroid)[1]; });
+}
+
+function resetLoop() {
+  console.log("call resetLoop()");
+
+  // remove month
+  header.select("p")
+    .transition()
+      .duration(loopTime / 2)
+      .style("transform", "rotateX(-90deg)")
+    .remove()
+
+    // restart
+    .on("end", function() {
+      d3.timeout(startLoop, loopTime * 5);
+    });
 }

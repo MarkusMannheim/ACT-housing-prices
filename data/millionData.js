@@ -24,8 +24,7 @@ fs.readFile("./million_data.csv", "utf8", function(error, data) {
 
   millionData.forEach(function(d, i) {
     cleanData.push({
-      suburb: d.key,
-      centroid: d3.geoCentroid(d)
+      suburb: d.key
     });
     cleanData[i].data = [];
     d.value.forEach(function(e) {
@@ -56,6 +55,8 @@ fs.readFile("./million_data.csv", "utf8", function(error, data) {
       });
 
       if (match.length == 1) {
+        match[0].centroid = d3.geoCentroid(d);
+
         finalData.features.push({
           type: "Feature",
           geometry: d.geometry,
