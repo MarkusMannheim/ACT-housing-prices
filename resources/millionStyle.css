@@ -50,11 +50,19 @@ h1, p {
 #header {
   position: fixed;
   font-family: "ABCSans Black", "Arial Black", sans-serif;
+  right: 0;
+  text-align: center;
+}
+#header h1 {
+  padding: 3px 6px;
   font-size: 1.25rem;
   color: #01CFFF;
   background: #333;
-  padding: 3px 6px;
-  right: 0;
+}
+#header p {
+  padding-top: 1rem;
+  font-size: 1.5rem;
+  text-shadow: 1px 1px 1px #f2f2f2;
 }
 #map {
   height: 100%;

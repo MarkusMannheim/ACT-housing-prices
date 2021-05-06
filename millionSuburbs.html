@@ -29,7 +29,10 @@
   <body>
     <!-- HTML skeleton -->
     <div id="container">
-      <div id="header">MILLION-DOLLAR SALES</div>
+      <div id="header">
+        <h1>MILLION-DOLLAR SALES</h1>
+        <p></p>
+      </div>
       <svg id="map">
         <g id="mapGroup">
           <g id="suburbs"></g>
@@ -51,9 +54,6 @@
       footer = d3.select("#footer");
 
       // declare values
-      width = 0,
-      height = 0,
-      month = 0;
       loopTime = 250;
 
       // load data

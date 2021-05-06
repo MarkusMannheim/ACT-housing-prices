@@ -48,7 +48,7 @@ function mapFunctions() {
       })
     ]);
 
-  
+
 }
 
 function resizer() {
@@ -98,7 +98,56 @@ function openViz() {
     // fade in
     map.transition()
       .duration(500)
-      .style("opacity", 1);
+      .style("opacity", 1)
+
+      .on("end", startLoop);
 
   }, 500);
+}
+
+function startLoop() {
+  console.log("call startLoop()");
+
+  month = 0;
+  illustrateMonth(month);
+
+  timer = d3.timer(function(elapsed) {
+    if (elapsed >= month * loopTime + loopTime) {
+      month = month + 1;
+
+      if (month > 119) {
+        timer.stop();
+
+      } else {
+        illustrateMonth(month);
+      }
+    }
+  });
+}
+
+function monthToDateString(month) {
+  console.log("call monthToDateString()");
+
+  let dateString = (2011 + (Math.floor(month / 12))) + "-" + String((month % 12) + 1).padStart(2, 0) + "-01";
+
+  return dateString;
+}
+
+function illustrateMonth(month) {
+  console.log("call illustrateMonth()");
+
+  let dateString = monthToDateString(month);
+  changeMonthLabel(dateString);
+  drawSales(dateString);
+}
+
+function changeMonthLabel(dateString) {
+  console.log("call changeMonthLabel(dateString)");
+
+  header.select("p")
+    .text(d3.timeFormat("%b %Y")(d3.timeParse("%Y-%m-%d")(dateString)));
+}
+
+function drawSales(dateString) {
+
 }
