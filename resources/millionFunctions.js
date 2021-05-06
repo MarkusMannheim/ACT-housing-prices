@@ -75,8 +75,8 @@ function adjustFunctions() {
 
   // map projection
   mobile ?
-    projection.fitExtent([[-width * .2, 45], [width * .8, height + 15]], suburbData) :
-    projection.fitExtent([[10, 10], [width * .8, height - 25]], suburbData);
+    projection.fitExtent([[-width * .2, 40], [width * .8, height + 15]], suburbData) :
+    projection.fitExtent([[-width * .25, 10], [width * .8, height - 25]], suburbData);
 
   // sale circle radius
   mobile ?

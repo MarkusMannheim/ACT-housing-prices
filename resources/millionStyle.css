@@ -45,7 +45,7 @@ h1, p {
   left: 0;
   right: 0;
   display: flex;
-  flex-flow: column;  
+  flex-flow: column;
 }
 #header {
   position: fixed;
@@ -57,7 +57,7 @@ h1, p {
   padding: 2px 4px;
   font-size: 1rem;
   color: #01CFFF;
-  background: #333;  
+  background: #333;
 }
 #header p {
   box-sizing: border-box;
@@ -101,6 +101,7 @@ h1, p {
   color: #999;
   font-size: .75rem;
   background: white;
+  padding: .25rem .25rem 0 0;
 }
 .sale {
   stroke: #333;
