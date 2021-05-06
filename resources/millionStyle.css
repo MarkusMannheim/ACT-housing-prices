@@ -45,7 +45,7 @@ h1, p {
   left: 0;
   right: 0;
   display: flex;
-  flex-flow: column;
+  flex-flow: column;  
 }
 #header {
   position: fixed;
@@ -57,14 +57,15 @@ h1, p {
   padding: 2px 4px;
   font-size: 1rem;
   color: #01CFFF;
-  background: #333;
+  background: #333;  
 }
 #header p {
+  box-sizing: border-box;
   position: absolute;
   width: 100%;
   padding: 2px 0;
   font-size: 1rem;
-  box-shadow: 1px 1px 3px #999;
+  box-shadow: 1px 1px 2px #999;
   border: solid 1px #333;
   transform: rotateX(90deg);
   transform-origin: top;
@@ -126,7 +127,7 @@ h1, p {
 #legend p {
   text-align: center;
   width: 1rem;
-  margin-left: .5rem;
+  margin-left: .25rem;
   font-size: .8rem;
   align-self: center;
 }
@@ -170,7 +171,7 @@ h1, p {
   #header p {
     padding: 3px 0;
     font-size: 1.25rem;
-    box-shadow: 2px 2px 5px #999;
+    box-shadow: 2px 2px 4px #999;
   }
   #border {
     stroke-dasharray: 2 3;
