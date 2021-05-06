@@ -47,8 +47,6 @@ function mapFunctions() {
           }) : null;
       })
     ]);
-
-
 }
 
 function resizer() {
@@ -57,6 +55,7 @@ function resizer() {
   [width, height, mobile] = getDimensions();
   adjustFunctions();
   plotMap();
+  adjustSales();
 }
 
 function getDimensions() {
@@ -76,7 +75,7 @@ function adjustFunctions() {
 
   mobile ?
     projection.fitSize([width, height], suburbData) :
-    projection.fitSize([width * .75, height], suburbData);
+    projection.fitSize([width * .7, height], suburbData);
 }
 
 function plotMap() {
@@ -149,5 +148,45 @@ function changeMonthLabel(dateString) {
 }
 
 function drawSales(dateString) {
+  console.log("call drawSales(dateString)");
 
+  // find sales
+  let saleData = [];
+  suburbData.features
+    .forEach(function(d) {
+      if (d.properties.data) {
+        d.properties.data.forEach(function(e) {
+          if (e.month == dateString) {
+            saleData.push({
+              count: e.count,
+              centroid: d.properties.centroid
+            });
+          };
+        });
+      }
+    });
+
+  saleData.forEach(function(d) {
+    mapGroup.append("circle")
+      .datum(d)
+      .classed("sale", true)
+      .attr("cx", projection(d.centroid)[0])
+      .attr("cy", projection(d.centroid)[1])
+      .attr("r", 0)
+      .transition()
+        .duration(loopTime / 2)
+        .attr("r", d.count)
+      .transition()
+        .duration(loopTime * 2)
+        .attr("r", 0)
+      .remove();
+  });
+}
+
+function adjustSales() {
+  console.log("call adjustSales(dateString)");
+
+  d3.selectAll(".sale")
+    .attr("cx", function(d) { return projection(d.centroid)[0]; })
+    .attr("cy", function(d) { return projection(d.centroid)[1]; });
 }
