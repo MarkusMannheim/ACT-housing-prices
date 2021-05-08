@@ -40,7 +40,7 @@ function mapFunctions() {
       d3.max(suburbData.features, function(d) {
         return d.properties.data ?
           d3.max(d.properties.data, function(e) {
-            return e.count;
+            return Math.sqrt(e.count / Math.PI);
           }) : null;
       })
     ]);
@@ -74,8 +74,8 @@ function adjustFunctions() {
 
   // sale circle radius
   mobile ?
-    rScale.range([1, 40]) :
-    rScale.range([1, 40]);
+    rScale.range([0, 20]) :
+    rScale.range([0, 35]);
 }
 
 function plotMap() {
@@ -143,7 +143,6 @@ function illustrateMonth(month) {
 }
 
 function changeMonthLabel(dateString) {
-  console.log(d3.selectAll("#header p").length);
 
   header.selectAll("p")
     .transition()
@@ -187,7 +186,7 @@ function drawSales(dateString) {
       .style("opacity", 0)
       .transition()
         .duration(loopTime)
-        .attr("r", rScale(d.count))
+        .attr("r", rScale(Math.sqrt(d.count / Math.PI)))
         .style("opacity", .75)
 
       // remove sale circles

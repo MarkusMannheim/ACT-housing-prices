@@ -139,24 +139,24 @@ h1, p {
   align-self: center;
 }
 #legend1 div {
-  height: 4.7px;
-  width: 4.7px;
-  border-radius: 4.7px;
+  height: 9.4px;
+  width: 9.4px;
+  border-radius: 9.4px;
 }
 #legend6 div {
-  height: 18px;
-  width: 18px;
-  border-radius: 18px;
+  height: 23px;
+  width: 23px;
+  border-radius: 23px;
 }
 #legend12 div {
-  height: 34px;
-  width: 34px;
-  border-radius: 34px;
+  height: 32.7px;
+  width: 32.7px;
+  border-radius: 32.7px;
 }
 #legend18 div {
-  height: 50px;
-  width: 50px;
-  border-radius: 50px;
+  height: 40px;
+  width: 40px;
+  border-radius: 40px;
 }
 @media only screen and (min-width: 500px) {
   .mobileSpan {
@@ -194,23 +194,23 @@ h1, p {
     font-size: .9rem;
   }
   #legend1 div {
-    height: 6.3px;
-    width: 6.3px;
-    border-radius: 6.3px;
+    height: 16.5px;
+    width: 16.5px;
+    border-radius: 16.5px;
   }
   #legend6 div {
-    height: 28px;
-    width: 28px;
-    border-radius: 28px;
+    height: 40.4px;
+    width: 40.4px;
+    border-radius: 40.4px;
   }
   #legend12 div {
-    height: 54px;
-    width: 54px;
-    border-radius: 54px;
+    height: 57.2px;
+    width: 57.2px;
+    border-radius: 57.2px;
   }
   #legend18 div {
-    height: 80px;
-    width: 80px;
-    border-radius: 80px;
+    height: 70px;
+    width: 70px;
+    border-radius: 70px;
   }
 }
