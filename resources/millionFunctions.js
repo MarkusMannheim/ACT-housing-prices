@@ -1,5 +1,4 @@
 function formatData(data) {
-  console.log("call formatData()");
 
   let borderData = topojson
     .feature(data[0], data[0].objects.areas);
@@ -12,7 +11,6 @@ function formatData(data) {
 }
 
 function mapLayout() {
-  console.log("call mapLayout()");
 
   border.datum(borderData)
     .classed("border", true);
@@ -28,7 +26,6 @@ function mapLayout() {
 }
 
 function mapFunctions() {
-  console.log("call mapFunctions()");
 
   projection = d3.geoConicEqualArea()
     .parallels([-26.3, -44.3])
@@ -50,7 +47,6 @@ function mapFunctions() {
 }
 
 function resizer() {
-  console.log("call resizer()");
 
   [width, height, mobile] = getDimensions();
   adjustFunctions();
@@ -59,7 +55,6 @@ function resizer() {
 }
 
 function getDimensions() {
-  console.log("call getDimensions()");
 
   let dimensions = document.getElementById("map")
     .getBoundingClientRect();
@@ -71,7 +66,6 @@ function getDimensions() {
 }
 
 function adjustFunctions() {
-  console.log("call adjustFunctions()");
 
   // map projection
   mobile ?
@@ -80,19 +74,17 @@ function adjustFunctions() {
 
   // sale circle radius
   mobile ?
-    rScale.range([1, 25]) :
+    rScale.range([1, 40]) :
     rScale.range([1, 40]);
 }
 
 function plotMap() {
-  console.log("call plotMap()");
 
   mapGroup.selectAll("path")
     .attr("d", path);
 }
 
 function openViz() {
-  console.log("call openViz()");
 
   // 0.5sec delay to load fonts
   d3.timeout(function() {
@@ -116,7 +108,6 @@ function openViz() {
 }
 
 function startLoop() {
-  console.log("call startLoop()");
 
   month = 0;
   illustrateMonth(month);
@@ -138,7 +129,6 @@ function startLoop() {
 }
 
 function monthToDateString(month) {
-  console.log("call monthToDateString()");
 
   let dateString = (2011 + (Math.floor(month / 12))) + "-" + String((month % 12) + 1).padStart(2, 0) + "-01";
 
@@ -146,7 +136,6 @@ function monthToDateString(month) {
 }
 
 function illustrateMonth(month) {
-  console.log("call illustrateMonth()");
 
   let dateString = monthToDateString(month);
   changeMonthLabel(dateString);
@@ -154,9 +143,9 @@ function illustrateMonth(month) {
 }
 
 function changeMonthLabel(dateString) {
-  console.log("call changeMonthLabel(dateString)");
+  console.log(d3.selectAll("#header p").length);
 
-  header.select("p")
+  header.selectAll("p")
     .transition()
       .duration(loopTime / 2)
       .style("transform", "rotateX(-90deg)")
@@ -170,7 +159,6 @@ function changeMonthLabel(dateString) {
 }
 
 function drawSales(dateString) {
-  console.log("call drawSales(dateString)");
 
   // find sales
   let saleData = [];
@@ -212,7 +200,6 @@ function drawSales(dateString) {
 }
 
 function adjustSales() {
-  console.log("call adjustSales()");
 
   d3.selectAll(".sale")
     .attr("cx", function(d) { return projection(d.centroid)[0]; })
@@ -220,7 +207,6 @@ function adjustSales() {
 }
 
 function resetLoop() {
-  console.log("call resetLoop()");
 
   // remove month
   header.select("p")
