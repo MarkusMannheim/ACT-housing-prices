@@ -125,7 +125,7 @@ function startLoop() {
     if (elapsed >= month * loopTime + loopTime) {
       month = month + 1;
 
-      if (month > 59) {
+      if (month > 119) {
         timer.stop();
         // restart loop
         d3.timeout(resetLoop, loopTime * 5);
@@ -140,7 +140,7 @@ function startLoop() {
 function monthToDateString(month) {
   console.log("call monthToDateString()");
 
-  let dateString = (2016 + (Math.floor(month / 12))) + "-" + String((month % 12) + 1).padStart(2, 0) + "-01";
+  let dateString = (2011 + (Math.floor(month / 12))) + "-" + String((month % 12) + 1).padStart(2, 0) + "-01";
 
   return dateString;
 }
