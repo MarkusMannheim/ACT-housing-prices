@@ -19,9 +19,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- scripts and style -->
-    <script src="./resources/d3js.org/d3.v6.min.js"></script>
+    <script src="./resources/d3.v6.min.js"></script>
     <script src="./resources/topojson.v3.min.js"></script>
-    <script src="./resources/functions.js"></script>
+    <script src="./resources/mapFunctions.js"></script>
     <link href="./resources/mapStyle.css" rel="stylesheet">
     <link href="./media/abcLogo64.png" rel="icon">
   </head>
@@ -29,19 +29,51 @@
   <body>
     <!-- HTML skeleton -->
     <div id="container">
+      <div id="header">
+        <h1>TWO-YEAR PRICE GROWTH</h1>
+      </div>
       <svg id="map">
         <g id="mapGroup">
-          <path id="border"></path>
           <g id="suburbs"></g>
+          <path id="border"></path>
           <path id="water"></path>
-          <g id="camerasAll"></g>
-          <g id="camerasBest"></g>
         </g>
       </svg>
-      <div id="title">ALL MOBILE CAMERA SITES</div>
-      <div id="key"></div>
+      <div id="footer">Data: CoreLogic<span class="mobileSpan"><br></span><span class="desktopSpan">. </span>Graphic: Markus Mannheim</div>
     </div>
 
     <script>
+      // declare page elements
+      header = d3.select("#header");
+      map = d3.select("#map");
+      mapGroup = d3.select("#mapGroup");
+      border = d3.select("#border");
+      suburbGroup = d3.select("#suburbs");
+      water = d3.select("#water");
+      footer = d3.select("#footer");
+
+      // declare values
+
+      // load data
+      Promise.all([
+        d3.json("./data/border.topojson"),
+        d3.json("./data/mapData.geojson"),
+        d3.json("./data/mesh.topojson")
+      ]).then(function(data) {
+
+        // declare and format data
+        [borderData, suburbData, waterData] = formatData(data);
+
+        // set up map and functions
+        mapLayout();
+        mapFunctions();
+
+        // page dimensions
+        window.onresize = resizer;
+
+        // fade in and begin
+        openViz();
+      });
+    </script>
   </body>
 </html>
