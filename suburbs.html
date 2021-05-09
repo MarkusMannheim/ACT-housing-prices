@@ -12,6 +12,7 @@
 
     <!-- page data -->
     <meta charset="utf-8">
+    <meta http-equiv="Cache-control" content="no-cache">
     <title>ACT house prices</title>
     <meta name="description" content="ACT housing and rental price changes from 2019 to 2021.">
     <meta name="keywords" content="canberra, act, housing, house, price, prices, change, rises, map, suburb, suburbs">
@@ -30,16 +31,17 @@
     <!-- HTML skeleton -->
     <div id="container">
       <div id="header">
-        <h1>TWO-YEAR PRICE GROWTH</h1>
+        <h1>HOUSE PRICE GROWTH</h1>
       </div>
       <svg id="map">
         <g id="mapGroup">
           <g id="suburbs"></g>
+          <g id="regions"></g>
           <path id="border"></path>
           <path id="water"></path>
         </g>
       </svg>
-      <div id="footer">Price changes displayed are from January 2019 to February 2021. Map uses statistical area level 2 (SA2) boundaries; some areas are excluded due to inadequate price data. Source: CoreLogic.<br>Graphic: Markus Mannheim</div>
+      <div id="footer">Price growth measured from January 2019 to February 2021. Map uses statistical area level 2 (SA2) boundaries; some areas are excluded due to inadequate price data. Source: CoreLogic.<br>Graphic: Markus Mannheim</div>
     </div>
 
     <script>
@@ -49,24 +51,27 @@
       mapGroup = d3.select("#mapGroup");
       border = d3.select("#border");
       suburbGroup = d3.select("#suburbs");
+      regionGroup = d3.select("#regions");
       water = d3.select("#water");
       footer = d3.select("#footer");
 
       // declare values
+      zoom = false;
 
       // load data
       Promise.all([
         d3.json("./data/border.topojson"),
         d3.json("./data/mapData.topojson"),
+        d3.json("./data/regions.topojson"),
         d3.json("./data/mesh.topojson")
       ]).then(function(data) {
 
         // declare and format data
-        [borderData, suburbData, waterData] = formatData(data);
+        [borderData, suburbData, regionData, waterData] = formatData(data);
 
         // set up map and functions
         calculations();
-        mapLayout();
+        mapShapes();
 
         // page dimensions
         window.onresize = resizer;

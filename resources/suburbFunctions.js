@@ -5,14 +5,16 @@ function formatData(data) {
     .feature(data[0], data[0].objects.areas);
   let suburbData = topojson
     .feature(data[1], data[1].objects.areas);
-  let waterData = topojson
+  let regionData = topojson
     .feature(data[2], data[2].objects.areas);
+  let waterData = topojson
+    .feature(data[3], data[3].objects.areas);
 
   return [borderData, suburbData, waterData];
 }
 
-function mapLayout() {
-  console.log("call mapLayout()");
+function mapShapes() {
+  console.log("call mapShapes()");
 
   border.datum(borderData)
     .classed("border", true);
@@ -23,8 +25,14 @@ function mapLayout() {
     .enter().append("path")
       .classed("suburb", true)
       .style("fill", function(d) {
-        return abcColour(d.properties.change);
+        return !d.properties.change ? "#e2e2e2" : abcColour(d.properties.change);
       });
+
+  regions = suburbGroup
+    .selectAll(".region")
+      .data(regionData.features)
+    .enter().append("path")
+      .classed("region", true);
 
   water.datum(waterData)
     .classed("water", true);
@@ -94,7 +102,7 @@ function adjustFunctions() {
   // map projection
   mobile ?
     projection.fitExtent([[10, 30], [width * .8, height - 75]], suburbData) :
-    projection.fitExtent([[0, 35], [width * .8, height - 50]], suburbData);
+    projection.fitExtent([[0, 35], [width * .8, height - 60]], suburbData);
 }
 
 function plotMap() {
@@ -187,7 +195,7 @@ function adjustFunctions() {
   // map projection
   mobile ?
     projection.fitExtent([[10, 30], [width * .8, height - 75]], suburbData) :
-    projection.fitExtent([[0, 35], [width * .8, height - 50]], suburbData);
+    projection.fitExtent([[0, 35], [width * .8, height - 60]], suburbData);
 }
 
 function plotMap() {
@@ -209,7 +217,35 @@ function openViz() {
     // fade in
     map.transition()
       .duration(500)
-      .style("opacity", 1);
+      .style("opacity", 1)
 
+    .on("end", function() {
+      changeLabel((mobile ? "touch region for details" : "click region for details"));
+    });
   }, 500);
+}
+
+function cancelLabels() {
+
+  header.selectAll("p")
+    .transition()
+      .duration(500)
+      .style("transform", "rotateX(-90deg)")
+    .remove();
+}
+
+function changeLabel(text) {
+
+  cancelLabels()
+
+  header.append("p")
+    .text(text)
+    .transition()
+      .duration(500)
+      .style("transform", "rotateX(0deg)")
+    .transition()
+      .delay(3000)
+      .duration(500)
+      .style("transform", "rotateX(-90deg)")
+    .remove();
 }
