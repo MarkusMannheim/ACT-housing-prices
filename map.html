@@ -39,7 +39,7 @@
           <path id="water"></path>
         </g>
       </svg>
-      <div id="footer">Data: CoreLogic<span class="mobileSpan"><br></span><span class="desktopSpan">. </span>Graphic: Markus Mannheim</div>
+      <div id="footer">Price changes displayed are from January 2019 to February 2021. Map uses statistical area level 2 (SA2) boundaries; some areas are excluded due to inadequate price data. Source: CoreLogic.<br>Graphic: Markus Mannheim</div>
     </div>
 
     <script>
@@ -57,7 +57,7 @@
       // load data
       Promise.all([
         d3.json("./data/border.topojson"),
-        d3.json("./data/mapData.geojson"),
+        d3.json("./data/mapData.topojson"),
         d3.json("./data/mesh.topojson")
       ]).then(function(data) {
 
