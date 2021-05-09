@@ -3,7 +3,8 @@ function formatData(data) {
 
   let borderData = topojson
     .feature(data[0], data[0].objects.areas);
-  let suburbData = data[1];
+  let suburbData = topojson
+    .feature(data[1], data[1].objects.areas);
   let waterData = topojson
     .feature(data[2], data[2].objects.areas);
 
@@ -62,8 +63,8 @@ function adjustFunctions() {
 
   // map projection
   mobile ?
-    projection.fitExtent([[10, 20], [width * .8, height - 10]], suburbData) :
-    projection.fitExtent([[10, 10], [width * .7, height - 30]], suburbData);
+    projection.fitExtent([[10, 30], [width * .8, height - 75]], suburbData) :
+    projection.fitExtent([[0, 35], [width * .8, height - 50]], suburbData);
 }
 
 function plotMap() {
