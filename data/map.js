@@ -18,83 +18,95 @@ fs.readFile("./housingData.csv", "utf8", function(error, data) {
     });
 
   fs.readFile("./sa2.geojson", "utf8", function(error, data) {
-
-    nullAreas = ["Kowen", "Majura", "ACT - South West", "Molonglo Corridor", "Namadgi", "Tuggeranong", "Gungahlin - East", "Gungahlin - West", "Gooromon", "West Belconnen", "Mount Taylor", "Tuggeranong - West", "Canberra East"];
+    nullAreas = ["Black Mountain", "Kowen", "Majura", "ACT - South West", "Molonglo Corridor", "Namadgi", "Tuggeranong", "Gungahlin - East", "Gungahlin - West", "Gooromon", "West Belconnen", "Mount Taylor", "Tuggeranong - West", "Canberra East", "Molonglo - North", "Arboretum", "Scrivener", "Lake Burley Griffin"];
 
     geoData = JSON.parse(data)
       .features
       .filter(function(d) {
         return d.properties.STE_CODE16 == "8"
-             & d.properties.AREASQKM16 > 0
-             & !nullAreas.includes(d.properties.SA2_NAME16);
+          && d.properties.AREASQKM16 > 0
+          && !nullAreas.includes(d.properties.SA2_NAME16)
+          && d.properties.SA3_NAME16 !== "Canberra East";
       })
       .map(function(d) {
-        d.properties = {
-          sa2: d.properties.SA2_NAME16
+        return {
+          type: "Feature",
+          geometry: d.geometry,
+          properties: {
+            sa2: d.properties.SA2_NAME16,
+            sa3: d.properties.SA3_NAME16
+          }
         };
-        return d;
       });
 
-    matchedData = {
+    finalData = {
       type: "FeatureCollection",
       features: []
     };
 
-    geoData.forEach(function(geo) {
+    geoData.forEach(function(d) {
+
       let matches = priceData
-        .filter(function(data) {
-          return geo.properties.sa2 == data.sa2;
+        .filter(function(e) {
+          return e.sa2 == d.properties.sa2;
         });
 
       if (matches.length == 2) {
-        let match = matches
-          .filter(function(data) {
-            return data.type == "houses";
-          })[0];
-        matchedData.features
-          .push({
-            type: "Feature",
-            geometry: geo.geometry,
-            properties: {
-              sa2: match.sa2,
-              value: match.value,
-              old: match.old,
-              change: match.change
-            }
-          });
+        let match = matches.filter(function(e) {
+          return e.type == "houses";
+        })[0];
 
-      } else if (matches.length == 1) {
+        console.log(d.properties.sa2, d.properties.sa3);
+
+        finalData.features.push({
+          type: "Feature",
+          geometry: d.geometry,
+          properties: {
+            sa2: match.sa2.replace(" (ACT)", ""),
+            sa3: d.properties.sa3,
+            value: match.value,
+            old: match.old,
+            change: match.change
+          }
+        });
+
+      } else if (matches.length == 1 && matches[0].type == "houses") {
         let match = matches[0];
 
-        if (match.type == "houses") {
-          matchedData.features
-            .push({
-              type: "Feature",
-              geometry: geo.geometry,
-              properties: {
-                sa2: match.sa2,
-                value: match.value,
-                old: match.old,
-                change: match.change
-              }
-            });
-        }
+        console.log(d.properties.sa2, d.properties.sa3);
+
+        finalData.features.push({
+          type: "Feature",
+          geometry: d.geometry,
+          properties: {
+            sa2: match.sa2.replace(" (ACT)", ""),
+            sa3: d.properties.sa3,
+            value: match.value,
+            old: match.old,
+            change: match.change
+          }
+        });
+
       } else {
-        matchedData.features
-          .push({
-            type: "Feature",
-            geometry: geo.geometry,
-            properties: {
-              sa2: geo.properties.sa2,
-              value: null,
-              old: null,
-              change: null
-            }
-          });
+
+        console.log(d.properties.sa2, d.properties.sa3);
+
+        finalData.features.push({
+          type: "Feature",
+          geometry: d.geometry,
+          properties: {
+            sa2: d.properties.sa2.replace(" (ACT)", ""),
+            sa3: d.properties.sa3,
+            value: null,
+            old: null,
+            change: null
+          }
+        });
       }
+
     });
 
-    fs.writeFile("./mapData.geojson", JSON.stringify(matchedData), function(error) {
+    fs.writeFile("./mapData.geojson", JSON.stringify(finalData), function(error) {
       console.log("mapData.geojson written");
     });
   });
