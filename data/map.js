@@ -33,8 +33,8 @@ fs.readFile("./housingData.csv", "utf8", function(error, data) {
           type: "Feature",
           geometry: d.geometry,
           properties: {
-            sa2: d.properties.SA2_NAME16,
-            sa3: d.properties.SA3_NAME16
+            sa2: d.properties.SA2_NAME16.replace(" (ACT)", ""),
+            sa3: d.properties.SA3_NAME16.replace(" (ACT)", "")
           }
         };
       });
