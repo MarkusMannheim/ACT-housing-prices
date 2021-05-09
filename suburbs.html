@@ -34,14 +34,25 @@
         <h1>HOUSE PRICE GROWTH</h1>
       </div>
       <svg id="map">
+        <defs>
+          <linearGradient id="gradient" x1="0%", x2="0%", y1="100%", y2="0%"></linearGradient>
+        </defs>
         <rect id="touchScreen" onclick="regionBack()"></rect>
         <g id="mapGroup">
           <g id="suburbs"></g>
           <path id="border"></path>
           <g id="regions"></g>
           <path id="water"></path>
+          <g id="legend">
+            <rect id="legendBar"></rect>
+            <g id="axisGroup">
+              <text id="legendLabel">growth</text>
+            </g>
+          </g>
         </g>
       </svg>
+      <div id="labelDiv"></div>
+      <div id="tip"></div>
       <div id="footer">Price growth measured from January 2019 to February 2021. Map uses statistical area level 2 (SA2) boundaries; some areas are excluded due to inadequate price data. Source: CoreLogic.<br>Graphic: Markus Mannheim</div>
     </div>
 
@@ -56,6 +67,13 @@
       regionGroup = d3.select("#regions");
       water = d3.select("#water");
       footer = d3.select("#footer");
+      tip = d3.select("#tip");
+      labelDiv = d3.select("#labelDiv");
+      legend = d3.select("#legend");
+      gradient = d3.select("#gradient");
+      legendBar = d3.select("#legendBar");
+      axisGroup = d3.select("#axisGroup");
+      legendLabel = d3.select("#legendLabel");
 
       // declare values
       zoom = false;
