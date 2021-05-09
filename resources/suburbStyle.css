@@ -70,14 +70,12 @@ h1, p {
   pointer-events: none;
 }
 .suburb {
-  fill: #e6e6e6;
   stroke: white;
 }
 #water {
   fill: #666;
   pointer-events: none;
 }
-
 .desktopSpan {
   display: none;
 }
