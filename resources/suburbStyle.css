@@ -31,7 +31,6 @@ green: #00A388
   font-size: 1em;
   font-family: "ABCSans Regular", "Arial", sans-serif;
   color: #333;
-  pointer-events: none;
 }
 body {
   overflow: hidden;
@@ -53,6 +52,7 @@ h1, p {
   font-family: "ABCSans Black", "Arial Black", sans-serif;
   right: 0;
   text-align: center;
+  pointer-events: none;
 }
 #header h1 {
   padding: 2px 4px;
@@ -60,12 +60,14 @@ h1, p {
   color: #01CFFF;
   background: #333;
 }
+#touchScreen {
+  fill: rgba(0, 0, 0, 0);
+  pointer-events: all;
+}
 #map {
   height: 100%;
   opacity: 0;
-}
-#mapGroup.zoom {
-  pointer-events: all;
+  pointer-events: none;
 }
 #border {
   fill: none;
@@ -75,6 +77,13 @@ h1, p {
 }
 .suburb {
   stroke: white;
+  pointer-events: none;
+}
+.suburb.zoom {
+  pointer-events: all;
+}
+.suburb.fade {
+  opacity: .2;
 }
 .region {
   fill: #FFB300;
@@ -101,6 +110,7 @@ h1, p {
   font-size: .75rem;
   background: white;
   padding: .25rem .25rem 0 0;
+  pointer-events: none;
 }
 #header p {
   box-sizing: border-box;

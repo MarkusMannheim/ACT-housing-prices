@@ -66,7 +66,8 @@ fs.readFile("./housingData.csv", "utf8", function(error, data) {
             sa3: d.properties.sa3,
             value: match.value,
             old: match.old,
-            change: match.change
+            change: match.change,
+            centroid: d3.geoCentroid(d)
           }
         });
 
@@ -83,7 +84,8 @@ fs.readFile("./housingData.csv", "utf8", function(error, data) {
             sa3: d.properties.sa3,
             value: match.value,
             old: match.old,
-            change: match.change
+            change: match.change,
+            centroid: d3.geoCentroid(d)
           }
         });
 
@@ -99,7 +101,8 @@ fs.readFile("./housingData.csv", "utf8", function(error, data) {
             sa3: d.properties.sa3,
             value: null,
             old: null,
-            change: null
+            change: null,
+            centroid: d3.geoCentroid(d)
           }
         });
       }
