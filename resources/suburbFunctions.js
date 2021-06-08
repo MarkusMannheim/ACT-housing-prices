@@ -1,4 +1,5 @@
 function dataFormat(data) {
+  console.log("call formatData()");
 
   let borderData = topojson
     .feature(data[0], data[0].objects.areas);
@@ -13,6 +14,7 @@ function dataFormat(data) {
 }
 
 function mapShapes() {
+  console.log("call mapShapes()");
 
   border.datum(borderData)
     .classed("border", true);
@@ -46,6 +48,7 @@ function mapShapes() {
 }
 
 function calculations() {
+  console.log("call calculations()");
 
   projection = d3.geoConicEqualArea()
     .parallels([-26.3, -44.3])
@@ -95,6 +98,7 @@ function calculations() {
 }
 
 function resize() {
+  console.log("call resize()");
 
   [width, height, mobile] = getDimensions();
 
@@ -110,6 +114,7 @@ function resize() {
 }
 
 function getDimensions() {
+  console.log("call getDimensions()");
 
   let dimensions = document.getElementById("map")
     .getBoundingClientRect();
@@ -121,6 +126,7 @@ function getDimensions() {
 }
 
 function adjustProjection() {
+  console.log("call adjustProjection()");
 
   // map projection
   mobile ?
@@ -131,6 +137,7 @@ function adjustProjection() {
 }
 
 function plotMap() {
+  console.log("call plotMap()");
 
   mapGroup.selectAll("path")
     .transition()
@@ -172,6 +179,7 @@ function plotMap() {
 }
 
 function openViz() {
+  console.log("call openViz()");
 
   // 0.5sec delay to load fonts
   d3.timeout(function() {
@@ -191,6 +199,7 @@ function openViz() {
 }
 
 function cancelLabels() {
+  console.log("call cancelLabels()");
 
   header.selectAll("p")
     .transition()
@@ -200,6 +209,7 @@ function cancelLabels() {
 }
 
 function changeLabel(text) {
+  console.log("call changeLabel()");
 
   cancelLabels();
 
@@ -216,6 +226,7 @@ function changeLabel(text) {
 }
 
 function regionZoom(event, d) {
+  console.log("call regionZoom()");
   tip.style("opacity", 0);
 
   changeLabel(d.properties.sa3);
@@ -244,13 +255,13 @@ function regionZoom(event, d) {
 }
 
 function regionBack() {
+  console.log("call regionBack()");
   tip.style("opacity", 0);
 
   if (zoom) {
     changeLabel((mobile ? "touch region for details" : "click region for details"));
 
     zoom = false;
-    suburbZoom = false;
     zoomData = suburbData;
     regions.classed("zoom", false);
     suburbs.classed("zoom", false)
@@ -263,14 +274,9 @@ function regionBack() {
 }
 
 function suburbInfo(event, d) {
+  console.log("call suburbInfo()");
 
-  if (suburbZoom == d.properties.sa2) {
-    suburbZoom = false;
-    tip.style("opacity", 0);
-
-  } else if (d.properties.value) {
-    suburbZoom = d.properties.sa2;
-
+  if (d.properties.value) {
     tip.style("opacity", 0)
       .style("top", "0px")
       .style("left", "0px")
